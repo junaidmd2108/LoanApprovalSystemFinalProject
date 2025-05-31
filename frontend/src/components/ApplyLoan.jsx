@@ -5,32 +5,34 @@ import { useNavigate } from 'react-router-dom';
 export default function ApplyLoan() {
   const navigate = useNavigate();
 
-  // Define loan types and their interest rates
+  // Define loan types and their interest rates (as decimals)
   const loanOptions = {
     personal: 0.05,
-    home: 0.04,
+    home:      0.04,
     education: 0.03,
-    business: 0.06,
-    auto: 0.06
+    business:  0.06,
+    auto:      0.06
   };
 
   const [formData, setFormData] = useState({
-    loanType: '',
-    amount: '',
-    tenure: '',
+    loanType:     '',
+    amount:       '',
+    tenure:       '',
     interestRate: ''
   });
-  const [error, setError] = useState('');
+  const [error,   setError]   = useState('');
   const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = e => {
     const { name, value } = e.target;
 
     if (name === 'loanType') {
+      const rate = loanOptions[value] ?? '';
       setFormData(fd => ({
         ...fd,
         loanType: value,
-        interestRate: loanOptions[value] != null ? loanOptions[value] : ''
+        interestRate: rate
       }));
     } else {
       setFormData(fd => ({
@@ -45,18 +47,32 @@ export default function ApplyLoan() {
 
   const handleSubmit = async e => {
     e.preventDefault();
+    setLoading(true);
+
+    // Prepare the payload with proper number types
+    const payload = {
+      loanType:     formData.loanType,
+      amount:       parseFloat(formData.amount),
+      tenure:       parseInt(formData.tenure, 10),
+      interestRate: formData.interestRate
+    };
+
     try {
       const response = await axios.post(
         'http://localhost:8080/api/apply-loan',
-        formData
+        payload
       );
-      setSuccess(response.data);               // e.g. "Loan application submitted successfully."
-      // Optionally clear form or redirect:
+      setSuccess(response.data); // e.g. "Loan application submitted successfully."
+      // Clear form
+      setFormData({ loanType: '', amount: '', tenure: '', interestRate: '' });
+      // Optionally redirect:
       // navigate('/transactions');
     } catch (err) {
       console.error('Loan application error:', err);
       if (err.response?.data) setError(err.response.data);
       else setError('Loan application failed');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,7 +80,7 @@ export default function ApplyLoan() {
     <div>
       <h2>Apply for a Loan</h2>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error   && <p style={{ color: 'red' }}>{error}</p>}
       {success && <p style={{ color: 'green' }}>{success}</p>}
 
       <form onSubmit={handleSubmit}>
@@ -87,11 +103,15 @@ export default function ApplyLoan() {
         <br />
 
         <label>
-          Interest Rate (%):
+          Interest Rate:
           <input
             type="text"
             name="interestRate"
-            value={formData.interestRate}
+            value={
+              formData.interestRate !== ''
+                ? (formData.interestRate * 100).toFixed(2) + '%'
+                : ''
+            }
             readOnly
           />
         </label>
@@ -123,7 +143,9 @@ export default function ApplyLoan() {
         </label>
         <br />
 
-        <button type="submit">Apply</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Applying…' : 'Apply'}
+        </button>
       </form>
     </div>
   );
