@@ -1,34 +1,31 @@
 package com.junaid.backend.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import com.junaid.backend.entity.User;
 import com.junaid.backend.repository.UserRepository;
-import com.junaid.backend.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3001")
 @RequestMapping("/api")
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Autowired
-    private UserRepository userRepository; // for login only
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody User user) {
-        userService.register(user);
-        return ResponseEntity.ok("User registered successfully.");
+    public ResponseEntity<?> registerUser(@RequestBody User user) {
+        // Check for existing user by username:
+        if (userRepository.findByUsername(user.getUsername()) != null) {
+            return ResponseEntity.status(409).body("Username already exists");
+        }
+        // Hash password and save:
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        return ResponseEntity.ok("Registration successful");
     }
-
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User loginRequest) {
-        userService.login(loginRequest);
-        return ResponseEntity.ok("Login successful.");
-    }
-
 }

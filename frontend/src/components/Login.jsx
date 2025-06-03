@@ -1,11 +1,27 @@
 import React, { useState } from 'react';
+import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-function Login() {
+export default function Login() {
+  const { login } = React.useContext(AuthContext);
+  const navigate = useNavigate();
+  // State to hold form data
+  // and handle form submission
+  // and error handling
+  // and success message
+  // and loading state
+  // and form data
+  // and handle form submission
+  // and error handling
+  // and success message    
   const [formData, setFormData] = useState({
     name: '',
     password: ''
   });
+
+  const [error, setError] = useState('null');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -14,8 +30,12 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
 
     try {
+      // Call the login function from AuthContext
+      await login(formData.name, formData.password);
       const response = await axios.post('http://localhost:8080/api/login', {
         name: formData.name,
         password: formData.password
@@ -60,4 +80,3 @@ function Login() {
   );
 }
 
-export default Login;

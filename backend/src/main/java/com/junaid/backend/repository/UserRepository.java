@@ -1,11 +1,14 @@
 package com.junaid.backend.repository;
 
+import com.junaid.backend.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import com.junaid.backend.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    boolean existsByName(String name);
-    User findByName(String name);
+    // Check if a user exists by their username
+    boolean existsByUsername(String username);
+
+    // Find a user entity by its username
+    User findByUsername(String username);
 }

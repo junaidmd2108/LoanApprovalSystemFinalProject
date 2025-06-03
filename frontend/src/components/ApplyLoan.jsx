@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+// src/components/ApplyLoan.js
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 export default function ApplyLoan() {
+  const { token, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   // Define loan types and their interest rates (as decimals)
   const loanOptions = {
-    personal: 0.05,
+    personal:  0.05,
     home:      0.04,
     education: 0.03,
     business:  0.06,
@@ -48,6 +51,8 @@ export default function ApplyLoan() {
   const handleSubmit = async e => {
     e.preventDefault();
     setLoading(true);
+    setError('');
+    setSuccess('');
 
     // Prepare the payload with proper number types
     const payload = {
@@ -60,27 +65,45 @@ export default function ApplyLoan() {
     try {
       const response = await axios.post(
         'http://localhost:8080/api/apply-loan',
-        payload
+        payload,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        }
       );
-      setSuccess(response.data); // e.g. "Loan application submitted successfully."
+
+      // Success message from backend
+      setSuccess(response.data);
       // Clear form
       setFormData({ loanType: '', amount: '', tenure: '', interestRate: '' });
-      // Optionally redirect:
-      // navigate('/transactions');
+      // Optionally redirect to another page:
+      // navigate('/some-other-route');
     } catch (err) {
       console.error('Loan application error:', err);
-      if (err.response?.data) setError(err.response.data);
-      else setError('Loan application failed');
+
+      if (err.response) {
+        if (err.response.status === 401 || err.response.status === 403) {
+          setError('Session expired or unauthorized. Please log in again.');
+          logout();
+          return;
+        }
+        // Backend might return a message in response.data
+        setError(err.response.data || 'Loan application failed');
+      } else {
+        setError('Loan application failed');
+      }
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div>
+    <div style={{ maxWidth: 500, margin: '2rem auto' }}>
       <h2>Apply for a Loan</h2>
 
-      {error   && <p style={{ color: 'red' }}>{error}</p>}
+      {error   && <p style={{ color: 'red'   }}>{error}</p>}
       {success && <p style={{ color: 'green' }}>{success}</p>}
 
       <form onSubmit={handleSubmit}>

@@ -1,31 +1,77 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+// src/App.js
+import React, { useContext } from 'react';
+import { BrowserRouter as Router, Route, Routes, Link, Navigate } from 'react-router-dom';
 
 import Registration from './components/Registration';
 import Login        from './components/Login';
 import ApplyLoan    from './components/ApplyLoan';
 
-function App() {
+import { AuthContext, AuthProvider } from './context/AuthContext';
+
+function AppWrapper() {
+  const { token, logout } = useContext(AuthContext);
+
   return (
     <Router>
-      <div>
+      <div style={{ maxWidth: 600, margin: '2rem auto' }}>
         <h1>Loan Approval System</h1>
-        <nav>
-          <Link to="/register">Register</Link> |{' '}
-          <Link to="/login">Login</Link>     |{' '}
-          <Link to="/apply-loan">ApplyLoan</Link> {/* ← AND ADD THIS LINK */}
+        <nav style={{ marginBottom: '1rem' }}>
+          {token ? (
+            <>
+              <Link to="/">Home</Link> |{' '}
+              <Link to="/apply-loan">Apply Loan</Link> |{' '}
+              <button onClick={logout}>Logout</button>
+            </>
+          ) : (
+            <>
+              <Link to="/register">Register</Link> |{' '}
+              <Link to="/login">Login</Link>
+            </>
+          )}
         </nav>
 
-
         <Routes>
-          <Route path="/register" element={<Registration />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/apply-loan" element={<ApplyLoan />} />
+          <Route
+            path="/"
+            element={
+              token ? (
+                <h2>Welcome back! Ready to apply for a loan?</h2>
+              ) : (
+                <h2>Please register or login to continue.</h2>
+              )
+            }
+          />
+
+          <Route
+            path="/register"
+            element={token ? <Navigate to="/apply-loan" replace /> : <Registration />}
+          />
+
+          <Route
+            path="/login"
+            element={token ? <Navigate to="/apply-loan" replace /> : <Login />}
+          />
+
+          <Route
+            path="/apply-loan"
+            element={token ? <ApplyLoan /> : <Navigate to="/login" replace />}
+          />
+
+          {/* Optional: catch-all for undefined routes */}
+          <Route
+            path="*"
+            element={<h2>404: Page Not Found</h2>}
+          />
         </Routes>
       </div>
     </Router>
   );
 }
 
-export default App;
-
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppWrapper />
+    </AuthProvider>
+  );
+}
