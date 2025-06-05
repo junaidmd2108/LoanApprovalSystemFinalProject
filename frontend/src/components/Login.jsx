@@ -1,26 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
-  const { login } = React.useContext(AuthContext);
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
-  // State to hold form data
-  // and handle form submission
-  // and error handling
-  // and success message
-  // and loading state
-  // and form data
-  // and handle form submission
-  // and error handling
-  // and success message    
+
   const [formData, setFormData] = useState({
-    name: '',
+    username: '', // ✅ changed from 'name' to 'username'
     password: ''
   });
 
-  const [error, setError] = useState('null');
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -34,24 +25,15 @@ export default function Login() {
     setError(null);
 
     try {
-      // Call the login function from AuthContext
-      await login(formData.name, formData.password);
-      const response = await axios.post('http://localhost:8080/api/login', {
-        name: formData.name,
-        password: formData.password
-      });
-
-      alert(response.data); // Should say: Login successful
+      await login(formData.username, formData.password); // ✅ Correct call
+      alert("Login successful!");
+      navigate("/apply-loan"); // or wherever you want to redirect
     } catch (error) {
-        if (error.response && (error.response.status === 401|| error.response.status === 404)) {
-            alert(error.response.data.message); // Show the error message from the server
-              }
-              else {
-
-                console.error('Login error:', error);
-      alert('Login failed');
+      console.error('Login error:', error);
+      alert("Login failed: " + error.message);
+    } finally {
+      setLoading(false);
     }
-              }      
   };
 
   return (
@@ -60,9 +42,9 @@ export default function Login() {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          name="name"
+          name="username" // ✅ must match backend DTO field
           placeholder="Username"
-          value={formData.name}
+          value={formData.username}
           onChange={handleChange}
           required
         /><br />
@@ -74,9 +56,10 @@ export default function Login() {
           onChange={handleChange}
           required
         /><br />
-        <button type="submit">Login</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
       </form>
     </div>
   );
 }
-

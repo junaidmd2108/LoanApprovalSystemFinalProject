@@ -18,6 +18,7 @@ export default function ApplyLoan() {
   };
 
   const [formData, setFormData] = useState({
+    nameOfApplicant: '',
     loanType:     '',
     amount:       '',
     tenure:       '',
@@ -56,6 +57,7 @@ export default function ApplyLoan() {
 
     // Prepare the payload with proper number types
     const payload = {
+      nameOfApplicant: formData.nameOfApplicant,
       loanType:     formData.loanType,
       amount:       parseFloat(formData.amount),
       tenure:       parseInt(formData.tenure, 10),
@@ -107,6 +109,18 @@ export default function ApplyLoan() {
       {success && <p style={{ color: 'green' }}>{success}</p>}
 
       <form onSubmit={handleSubmit}>
+        <label>
+          Name of Applicant:
+          <input
+            type="text"
+            name="nameOfApplicant"
+            placeholder="Enter your full name"
+            value={formData.nameOfApplicant}
+            onChange={handleChange}
+            required
+          />
+          </label>
+        <br />
         <label>
           Loan Type:
           <select

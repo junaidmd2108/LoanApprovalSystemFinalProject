@@ -34,7 +34,7 @@ export default function Registration() {
         username: formData.username,
         password: formData.password
       };
-
+ 
       const response = await axios.post(
         'http://localhost:8080/api/register',
         payload

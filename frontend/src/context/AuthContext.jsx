@@ -17,21 +17,21 @@ export function AuthProvider({ children }) {
         }
     }
     , [token]);
-
     const login = async (username, password) => {
-        const response = await fetch("http://localhost:8080/api/login", {
+        const response = await fetch("http://localhost:8080/api/authenticate", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ name: username, password })
+            body: JSON.stringify({ username, password })  // ✅ Correct key names
         });
+    
         if (!response.ok) {
-            throw new Error("Invalid username or password");    
-
+            throw new Error("Invalid username or password");
         }
+    
         const data = await response.json();
-        setToken(data.jwt); 
+        setToken(data.jwt);
     };
 
     const logout = () => {

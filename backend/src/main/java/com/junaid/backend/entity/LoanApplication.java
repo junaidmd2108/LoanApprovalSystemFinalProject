@@ -15,8 +15,16 @@ import lombok.AllArgsConstructor;
 
 public class LoanApplication {
     @Id
+
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+
     private Long id;
+
+    @Column(name = "name_of_applicant", nullable = false)
+    private String nameOfApplicant;
+
 
     @Column(nullable = false)
     private String loanType;
@@ -29,6 +37,7 @@ public class LoanApplication {
 
     @Column(nullable = false)
     private double interestRate;
+
 
 
 }
