@@ -54,7 +54,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults()) // ✅ Enable global CORS support
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/register", "/api/authenticate").permitAll()
+                        .requestMatchers("/api/register", "/api/login", "/api/authenticate").permitAll() // ✅ allow login too
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
