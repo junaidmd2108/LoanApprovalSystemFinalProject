@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Routes, Link, Navigate } from 'react-ro
 import Registration from './components/Registration';
 import Login        from './components/Login';
 import ApplyLoan    from './components/ApplyLoan';
+import Chatbot      from './components/Chatbot'; // ✅ Import Chatbot component
 
 import { AuthContext, AuthProvider } from './context/AuthContext';
 
@@ -13,7 +14,7 @@ function AppWrapper() {
 
   return (
     <Router>
-      <div style={{ maxWidth: 600, margin: '2rem auto' }}>
+      <div style={{ maxWidth: 600, margin: '2rem auto', position: 'relative' }}>
         <h1>Loan Approval System</h1>
         <nav style={{ marginBottom: '1rem' }}>
           {token ? (
@@ -57,12 +58,14 @@ function AppWrapper() {
             element={token ? <ApplyLoan /> : <Navigate to="/login" replace />}
           />
 
-          {/* Optional: catch-all for undefined routes */}
           <Route
             path="*"
             element={<h2>404: Page Not Found</h2>}
           />
         </Routes>
+
+        {/* ✅ Floating Chatbot assistant */}
+        <Chatbot />
       </div>
     </Router>
   );
