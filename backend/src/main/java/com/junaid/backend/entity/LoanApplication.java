@@ -42,4 +42,8 @@ public class LoanApplication {
     // The interest rate (%) applied to this loan (e.g., 0.04 = 4%)
     @Column(nullable = false)
     private double interestRate;
+
+    @Lob
+    @Column(name = "supporting document")
+    private byte[] supportingDocument;
 }

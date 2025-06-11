@@ -24,6 +24,7 @@ export default function ApplyLoan() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
+  const [file, setFile] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,21 +53,31 @@ export default function ApplyLoan() {
     setError('');
     setSuccess('');
 
-    const payload = {
-      nameOfApplicant: formData.nameOfApplicant,
-      loanType: formData.loanType,
-      amount: parseFloat(formData.amount),
-      tenure: parseInt(formData.tenure, 10),
-      interestRate: formData.interestRate,
-    };
+    const formDataToSend = new FormData();
+    formDataToSend.append(
+      'loan',
+      new Blob(
+        [JSON.stringify({
+          nameOfApplicant: formData.nameOfApplicant,
+          loanType: formData.loanType,
+          amount: parseFloat(formData.amount),
+          tenure: parseInt(formData.tenure, 10),
+          interestRate: formData.interestRate,
+        })],
+        { type: 'application/json' }
+      )
+    );
+    if (file) {
+      formDataToSend.append('file', file);
+    }
 
     try {
       const response = await axios.post(
         'http://localhost:8080/api/apply-loan',
-        payload,
+        formDataToSend,
         {
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${token}`,
           },
         }
@@ -80,6 +91,7 @@ export default function ApplyLoan() {
         tenure: '',
         interestRate: '',
       });
+      setFile(null);
     } catch (err) {
       setSuccess('');
       if (err.response) {
@@ -165,6 +177,13 @@ export default function ApplyLoan() {
           onChange={handleChange}
           required
           style={inputStyle}
+        />
+
+        <input
+          type="file"
+          name="file"
+          onChange={e => setFile(e.target.files[0])}
+          style={{ margin: '0.6rem 0' }}
         />
 
         <button type="submit" disabled={loading} style={buttonStyle}>

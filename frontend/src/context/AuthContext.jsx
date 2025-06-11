@@ -9,6 +9,11 @@ export function AuthProvider({ children }) {
     }
     );
 
+    const [user, setUser] = useState(() => {
+        const storedUser = localStorage.getItem("user");
+        return storedUser ? JSON.parse(storedUser) : null;
+    });
+
     useEffect(() => {
         if (token) {
             localStorage.setItem("jwttoken", token);
@@ -23,7 +28,7 @@ export function AuthProvider({ children }) {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ username, password })  // ✅ Correct key names
+            body: JSON.stringify({ username, password })  //  Correct key names
         });
     
         if (!response.ok) {
@@ -32,14 +37,18 @@ export function AuthProvider({ children }) {
     
         const data = await response.json();
         setToken(data.jwt);
+        setUser({ username });
+        localStorage.setItem("user", JSON.stringify({ username }));
     };
 
     const logout = () => {
         setToken(null);
+        setUser(null);
+        localStorage.removeItem("user");
     };
 
     return (
-        <AuthContext.Provider value={{ token, login, logout }}>
+        <AuthContext.Provider value={{ token, user, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

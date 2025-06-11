@@ -1,47 +1,24 @@
 // src/App.js
 import React, { useContext } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
 import Registration from './components/Registration';
-import Login        from './components/Login';
-import ApplyLoan    from './components/ApplyLoan';
-import Chatbot      from './components/Chatbot'; // ✅ Import Chatbot component
-
+import Login from './components/Login';
+import ApplyLoan from './components/ApplyLoan';
+import Chatbot from './components/Chatbot';
+import Navbar from './components/Navbar'; //  Using the new Navbar
 import { AuthContext, AuthProvider } from './context/AuthContext';
+import LandingPage from './components/LandingPage';
 
 function AppWrapper() {
-  const { token, logout } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
 
   return (
     <Router>
+      <Navbar /> {/*  New navbar always visible */}
       <div style={{ maxWidth: 600, margin: '2rem auto', position: 'relative' }}>
-        <h1>Loan Approval System</h1>
-        <nav style={{ marginBottom: '1rem' }}>
-          {token ? (
-            <>
-              <Link to="/">Home</Link> |{' '}
-              <Link to="/apply-loan">Apply Loan</Link> |{' '}
-              <button onClick={logout}>Logout</button>
-            </>
-          ) : (
-            <>
-              <Link to="/register">Register</Link> |{' '}
-              <Link to="/login">Login</Link>
-            </>
-          )}
-        </nav>
-
         <Routes>
-          <Route
-            path="/"
-            element={
-              token ? (
-                <h2>Welcome back! Ready to apply for a loan?</h2>
-              ) : (
-                <h2>Please register or login to continue.</h2>
-              )
-            }
-          />
+          <Route path="/" element={<LandingPage />} />
 
           <Route
             path="/register"
@@ -64,7 +41,6 @@ function AppWrapper() {
           />
         </Routes>
 
-        {/* ✅ Floating Chatbot assistant */}
         <Chatbot />
       </div>
     </Router>

@@ -35,6 +35,19 @@ a:hover {
   text-decoration: underline;
 }
 
+/* Logout hover effect when styled as span */
+nav span {
+  color: #d9534f;
+  font-weight: 500;
+  cursor: pointer;
+  margin-left: 1rem;
+}
+
+nav span:hover {
+  color: #c9302c;
+  text-decoration: underline;
+}
+
 /* Form fields */
 input, select {
   width: 100%;

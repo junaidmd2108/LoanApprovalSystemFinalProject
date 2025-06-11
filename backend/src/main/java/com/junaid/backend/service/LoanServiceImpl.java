@@ -1,32 +1,31 @@
 package com.junaid.backend.service;
 
-// Importing necessary classes
 import com.junaid.backend.entity.LoanApplication;
 import com.junaid.backend.repository.LoanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-@Service  // This tells Spring that this class contains business logic and should be managed as a service
+@Service
 public class LoanServiceImpl implements LoanService {
 
-    private final LoanRepository loanRepository; // This connects to the database to save loan data
+    private final LoanRepository loanRepository;
 
-    // Constructor-based dependency injection (Spring injects LoanRepository here)
     @Autowired
     public LoanServiceImpl(LoanRepository loanRepository) {
         this.loanRepository = loanRepository;
     }
 
-    // This method is called when a user submits a loan application
     @Override
-    public String applyLoan(LoanApplication loan) {
-        // ✅ Step 1: Basic validation - Check that loan amount and tenure are greater than zero
+    public String applyLoan(LoanApplication loan, MultipartFile file) {
+        // Step 1: Basic validation
         if (loan.getAmount() <= 0 || loan.getTenure() <= 0) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
@@ -34,11 +33,20 @@ public class LoanServiceImpl implements LoanService {
             );
         }
 
-        // ✅ Step 2: Generate a mock credit score for the applicant (for now, randomly generated)
-        // Generates a score between 600 and 900
+        // Step 2: Attach uploaded file to loan object
+        try {
+            loan.setSupportingDocument(file.getBytes());
+        } catch (IOException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Failed to upload file: " + e.getMessage()
+            );
+        }
+
+        // Step 3: Generate mock credit score
         int generatedCreditScore = new Random().nextInt(301) + 600;
 
-        // ✅ Step 3: Define the required minimum credit score for each type of loan
+        // Step 4: Define credit score thresholds
         Map<String, Integer> requiredScores = new HashMap<>();
         requiredScores.put("home", 720);
         requiredScores.put("personal", 700);
@@ -46,13 +54,11 @@ public class LoanServiceImpl implements LoanService {
         requiredScores.put("business", 740);
         requiredScores.put("auto", 710);
 
-        // ✅ Step 4: Get the loan type from the application and find the required score
-        String loanType = loan.getLoanType().toLowerCase();  // Normalize to lowercase
-        int requiredScore = requiredScores.getOrDefault(loanType, 700); // Default to 700 if type not matched
+        // Step 5: Check if applicant meets credit score requirement
+        String loanType = loan.getLoanType().toLowerCase();
+        int requiredScore = requiredScores.getOrDefault(loanType, 700);
 
-        // ✅ Step 5: Compare generated credit score with the required score
         if (generatedCreditScore < requiredScore) {
-            // ❌ If credit score is too low, throw an error with a clear message
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Your credit score is " + generatedCreditScore +
@@ -61,10 +67,10 @@ public class LoanServiceImpl implements LoanService {
             );
         }
 
-        // ✅ Step 6: If score is acceptable, save the loan application to the database
+        // Step 6: Save the loan to database
         loanRepository.save(loan);
 
-        // ✅ Step 7: Return a success message (shown to user)
+        // Step 7: Return success message
         return "Loan application submitted successfully. Your credit score is " + generatedCreditScore + ".";
     }
 }
