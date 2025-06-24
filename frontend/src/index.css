@@ -1,91 +1,292 @@
-body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f5f7fa;
-  color: #333;
-}
-
-/* Page container */
-.container {
-  max-width: 450px;
+/* — your existing form styles — */
+.form-container {
+  max-width: 500px;
   margin: 3rem auto;
   padding: 2rem;
-  background-color: white;
-  border-radius: 12px;
+  background-color: #fff;
+  border-radius: 16px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
-/* Headings */
-h1, h2 {
+.form-container h2 {
   text-align: center;
-  color: #1f1f1f;
+  font-size: 1.8rem;
   margin-bottom: 1.5rem;
+  font-weight: bold;
 }
 
-/* Navbar links */
-a {
-  text-decoration: none;
-  color: #0077cc;
-  margin-right: 1rem;
-  font-weight: 500;
-}
-
-a:hover {
-  color: #005fa3;
-  text-decoration: underline;
-}
-
-/* Logout hover effect when styled as span */
-nav span {
-  color: #d9534f;
-  font-weight: 500;
-  cursor: pointer;
-  margin-left: 1rem;
-}
-
-nav span:hover {
-  color: #c9302c;
-  text-decoration: underline;
-}
-
-/* Form fields */
-input, select {
+.form-container input,
+.form-container select {
   width: 100%;
-  padding: 12px;
-  margin: 0.6rem 0 1rem 0;
-  border: 1px solid #ccc;
+  padding: 0.9rem;
+  margin: 0.6rem 0;
+  font-size: 1rem;
   border-radius: 8px;
-  font-size: 15px;
-  transition: border 0.3s ease;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
-input:focus, select:focus {
-  border: 1.5px solid #0077cc;
-  outline: none;
-}
-
-/* Button styling */
-button {
+.form-container button {
   width: 100%;
+  padding: 0.9rem;
+  margin-top: 1rem;
   background-color: #337af7;
   color: white;
-  padding: 12px;
-  font-size: 16px;
+  font-weight: bold;
+  font-size: 1rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s ease;
-  margin-top: 0.5rem;
 }
 
-button:hover {
-  background-color: #235ee8;
-}
-
-/* Centered welcome page text */
-.center-text {
+.form-success {
+  color: green;
   text-align: center;
-  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.form-error {
+  color: red;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+/* — registration-page specific styles — */
+.register-container {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.register-container h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #1f1f1f;
+}
+
+/* 3-column grid wrapper */
+.register-form .form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  grid-auto-rows: min-content;
+}
+
+/* ensure inputs, selects, and buttons fill their cells */
+.register-form input,
+.register-form select,
+.register-form button {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* span the button across all columns by default */
+.register-form button {
+  grid-column: span 3;
+  margin-top: 1.5rem;
+  padding: 0.9rem;
+  font-size: 1.1rem;
+  background-color: #337af7;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* optional: full-width override if you add <input className="full-width" /> */
+.register-form .full-width {
+  grid-column: 1 / -1;
+}
+
+/* success and error text (if using classes instead of inline styles) */
+.success-text {
+  color: green;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.error-text {
+  color: red;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+/* — explicit field placement for each row — */
+
+/* Row 1: Username / Password / Confirm Password */
+.register-form input[name="username"]         { grid-column: 1; grid-row: 1; }
+.register-form input[name="password"]         { grid-column: 2; grid-row: 1; }
+.register-form input[name="confirmPassword"]  { grid-column: 3; grid-row: 1; }
+
+/* Row 2: First / Middle / Last Name */
+.register-form input[name="firstName"]        { grid-column: 1; grid-row: 2; }
+.register-form input[name="middleName"]       { grid-column: 2; grid-row: 2; }
+.register-form input[name="lastName"]         { grid-column: 3; grid-row: 2; }
+
+/* Row 3: Contact Number / Email / Address */
+.register-form input[name="contactNumber"]    { grid-column: 1; grid-row: 3; }
+.register-form input[name="email"]            { grid-column: 2; grid-row: 3; }
+.register-form input[name="address"]          { grid-column: 3; grid-row: 3; }
+
+/* Row 4: DOB / ID Type / ID Number */
+.register-form input[name="dob"]              { grid-column: 1; grid-row: 4; }
+.register-form select[name="idType"]          { grid-column: 2; grid-row: 4; }
+.register-form input[name="idNumber"]         { grid-column: 3; grid-row: 4; }
+
+/* Row 5: Employment Status / Annual Income / empty */
+.register-form select[name="employmentStatus"] { grid-column: 1; grid-row: 5; }
+.register-form input[name="annualIncome"]      { grid-column: 2; grid-row: 5; }
+/* third cell on row 5 remains empty for alignment */
+
+/* Row 6: Submit Button */
+.register-form button[type="submit"]          { grid-column: 1 / -1; grid-row: 6; }
+
+/* — NAV BAR TWEAKS — */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 80px;
+  background-color: #337af7; /* match your header blue */
+}
+
+.navbar-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.navbar-links a {
+  padding: 0.5rem 1rem;
+  background-color: white;
+  color: #337af7;
+  border-radius: 8px;
+  text-decoration: none;
   font-weight: 500;
-  margin-top: 2rem;
+  transition: background-color 0.2s ease;
+}
+
+.navbar-links a:hover {
+  background-color: #f0f0f0;
+}
+
+/* — HERO SECTION — */
+.hero-background {
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  padding: 4rem 0;
+}
+
+.landing-overlay {
+  background-color: rgba(0,0,0,0.4);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.landing-box {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  color: white;
+}
+
+/* typography */
+.landing-box h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.landing-box p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  max-width: 600px;
+  color: #f0f0f0;
+}
+
+/* call-to-action links */
+.callout {
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.callout a {
+  display: inline-block;
+  margin: 0.25rem 0;
+  padding: 0.5rem 1rem;
+  background-color: white;
+  color: #337af7;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.callout a:hover {
+  background-color: #e6e6e6;
+}
+
+/* icon row */
+.icon-row {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.icon-item {
+  font-size: 2.5rem;
+}
+
+/* make sure images (if any) inside landing-box don’t overflow */
+.landing-box img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.navbar-logo-img {
+  height: 40px;
+  width: auto;
+}
+.navbar-logo-text {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+/* Make the icon larger... */
+.navbar-logo-img {
+  height: 60px;     /* up from 40px */
+  width: auto;
+}
+
+/* ...and shrink the text beside it */
+.navbar-logo-text {
+  color: white;
+  font-size: 1rem;  /* down from 1.5rem */
+  font-weight: 500; /* you can lighten the weight if you like */
 }

@@ -1,12 +1,10 @@
-// src/components/Registration.jsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-export default function Registration() {
-  const navigate = useNavigate();
-
+export default function Register() {
   const [formData, setFormData] = useState({
+    username: '',
+    password: '',
     firstName: '',
     middleName: '',
     lastName: '',
@@ -18,241 +16,257 @@ export default function Registration() {
     idNumber: '',
     employmentStatus: '',
     annualIncome: '',
-    username: '',
-    password: '',
-    confirmPassword: ''
   });
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
 
-  const handleChange = e => {
+  const idTypes = [
+    { value: '', label: 'Select ID Type' },
+    { value: 'driver_license', label: "Driver's License" },
+    { value: 'passport',      label: 'Passport' },
+    { value: 'ssn',           label: 'Social Security Card' },
+    { value: 'state_id',      label: 'State ID' },
+  ];
+
+  const employmentOptions = [
+    { value: '', label: 'Select Employment Status' },
+    { value: 'employed',      label: 'Employed' },
+    { value: 'self_employed', label: 'Self-Employed' },
+    { value: 'unemployed',    label: 'Unemployed' },
+    { value: 'student',       label: 'Student' },
+    { value: 'retired',       label: 'Retired' },
+  ];
+
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(f => ({ ...f, [name]: value }));
+    setMessage('');
     setError('');
   };
 
-  const handleSubmit = async e => {
+  const handleConfirmChange = (e) => {
+    setConfirmPassword(e.target.value);
+    setMessage('');
+    setError('');
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords don't match");
+    if (formData.password !== confirmPassword) {
+      setError('Passwords do not match');
       return;
     }
-
     try {
-      setLoading(true);
-      // strip out confirmPassword before sending
-      const { confirmPassword, ...payload } = formData;
-      // Optionally build a fullName for later
-      payload.fullName = `${payload.firstName} ${payload.middleName} ${payload.lastName}`.trim();
-
-      const res = await axios.post('http://localhost:8080/api/register', payload);
-      alert(res.data);
-      navigate('/login');
+      await axios.post('http://localhost:8080/api/register', formData);
+      setMessage('Registration successful!');
+      setFormData({
+        username: '', password: '', firstName: '', middleName: '', lastName: '',
+        contactNumber: '', email: '', address: '', dob: '', idType: '',
+        idNumber: '', employmentStatus: '', annualIncome: ''
+      });
+      setConfirmPassword('');
     } catch (err) {
-      if (err.response?.status === 409) {
-        setError(err.response.data || 'Username already exists');
-      } else {
-        setError('Registration failed. Please try again.');
-      }
-    } finally {
-      setLoading(false);
+      setError(err.response?.data || 'Something went wrong. Please try again.');
     }
   };
 
   return (
-    <form style={formGridStyle} onSubmit={handleSubmit}>
+    <div className="register-container" style={containerStyle}>
       <h2 style={titleStyle}>Register</h2>
-      {error && <p style={errorStyle}>{error}</p>}
+      {message && <p style={successStyle}>{message}</p>}
+      {error   && <p style={errorStyle  }>{error  }</p>}
 
-      {/* Row 1: Names */}
-      <input
-        name="firstName"
-        placeholder="First Name"
-        value={formData.firstName}
-        onChange={handleChange}
-        required
-        style={inputStyle}
-      />
-      <input
-        name="middleName"
-        placeholder="Middle Name"
-        value={formData.middleName}
-        onChange={handleChange}
-        style={inputStyle}
-      />
-      <input
-        name="lastName"
-        placeholder="Last Name"
-        value={formData.lastName}
-        onChange={handleChange}
-        required
-        style={inputStyle}
-      />
+      <form className="register-form" onSubmit={handleSubmit}>
+        <div className="form-grid">
+          {/* Row 1: Username / Password / Confirm Password */}
+          <input
+            name="username"
+            placeholder="Username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={handleConfirmChange}
+            required
+            style={inputStyle}
+          />
 
-      {/* Row 2: Contact / Email / DOB */}
-      <input
-        name="contactNumber"
-        type="tel"
-        placeholder="Contact Number"
-        value={formData.contactNumber}
-        onChange={handleChange}
-        required
-        style={inputStyle}
-      />
-      <input
-        name="email"
-        type="email"
-        placeholder="Email Address"
-        value={formData.email}
-        onChange={handleChange}
-        required
-        style={inputStyle}
-      />
-      <input
-        name="dob"
-        type="date"
-        placeholder="Date of Birth"
-        value={formData.dob}
-        onChange={handleChange}
-        required
-        style={inputStyle}
-      />
+          {/* Row 2: First / Middle / Last Name */}
+          <input
+            name="firstName"
+            placeholder="First Name"
+            value={formData.firstName}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
+          <input
+            name="middleName"
+            placeholder="Middle Name"
+            value={formData.middleName}
+            onChange={handleChange}
+            style={inputStyle}
+          />
+          <input
+            name="lastName"
+            placeholder="Last Name"
+            value={formData.lastName}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
 
-      {/* Row 3: Address spans all 3 */}
-      <input
-        name="address"
-        placeholder="Address"
-        value={formData.address}
-        onChange={handleChange}
-        required
-        style={{ ...inputStyle, gridColumn: '1 / -1' }}
-      />
+          {/* Row 3: Contact Number / Email / Address */}
+          <input
+            name="contactNumber"
+            placeholder="Contact Number"
+            value={formData.contactNumber}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
+          <input
+            name="address"
+            placeholder="Address"
+            value={formData.address}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
 
-      {/* Row 4: ID type, ID number, Employment */}
-      <select
-        name="idType"
-        value={formData.idType}
-        onChange={handleChange}
-        required
-        style={inputStyle}
-      >
-        <option value="">Select ID Type</option>
-        <option>Passport</option>
-        <option>Driver’s License</option>
-        <option>National ID</option>
-      </select>
-      <input
-        name="idNumber"
-        placeholder="ID Number"
-        value={formData.idNumber}
-        onChange={handleChange}
-        required
-        style={inputStyle}
-      />
-      <select
-        name="employmentStatus"
-        value={formData.employmentStatus}
-        onChange={handleChange}
-        required
-        style={inputStyle}
-      >
-        <option value="">Employment Status</option>
-        <option>Employed</option>
-        <option>Unemployed</option>
-        <option>Student</option>
-      </select>
+          {/* Row 4: DOB / ID Type / ID Number */}
+          <input
+            type="date"
+            name="dob"
+            placeholder="Date of Birth"
+            value={formData.dob}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
+          <select
+            name="idType"
+            value={formData.idType}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          >
+            {idTypes.map(opt => (
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
+          </select>
+          <input
+            name="idNumber"
+            placeholder="ID Number"
+            value={formData.idNumber}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
 
-      {/* Row 5: Annual Income spans 2 if Employed */}
-      <input
-        name="annualIncome"
-        type="number"
-        placeholder="Annual Income"
-        value={formData.annualIncome}
-        onChange={handleChange}
-        style={{
-          ...inputStyle,
-          gridColumn: formData.employmentStatus === 'Employed' ? '1 / span 2' : '1 / -1'
-        }}
-        disabled={formData.employmentStatus !== 'Employed'}
-      />
+          {/* Row 5: Employment Status / Annual Income / (empty) */}
+          <select
+            name="employmentStatus"
+            value={formData.employmentStatus}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          >
+            {employmentOptions.map(opt => (
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
+          </select>
+          <input
+            type="number"
+            name="annualIncome"
+            placeholder="Annual Income"
+            value={formData.annualIncome}
+            onChange={handleChange}
+            style={inputStyle}
+          />
+          <div /> {/* empty cell for alignment */}
 
-      {/* Row 6: Username / Passwords */}
-      <input
-        name="username"
-        placeholder="Choose a Username"
-        value={formData.username}
-        onChange={handleChange}
-        required
-        style={inputStyle}
-      />
-      <input
-        name="password"
-        type="password"
-        placeholder="Enter Password"
-        value={formData.password}
-        onChange={handleChange}
-        required
-        style={inputStyle}
-      />
-      <input
-        name="confirmPassword"
-        type="password"
-        placeholder="Confirm Password"
-        value={formData.confirmPassword}
-        onChange={handleChange}
-        required
-        style={inputStyle}
-      />
-
-      {/* Row 7: Submit spans all */}
-      <button
-        type="submit"
-        disabled={loading}
-        style={{ ...buttonStyle, gridColumn: '1 / -1' }}
-      >
-        {loading ? 'Registering…' : 'Register'}
-      </button>
-    </form>
+          {/* Row 6: Submit Button */}
+          <button type="submit" style={buttonStyle}>
+            Register
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
 
-// Styles
-const formGridStyle = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(3, 1fr)',
-  gap: '1rem',
-  padding: '2rem',
-  maxWidth: '800px',
+const containerStyle = {
+  maxWidth: '600px',
   margin: '2rem auto',
-  background: '#fff',
-  borderRadius: '12px',
-  boxShadow: '0 2px 12px rgba(0,0,0,0.1)',
+  padding: '2rem',
+  background: 'rgba(255, 255, 255, 0.95)',
+  borderRadius: '16px',
+  boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
 };
+
 const titleStyle = {
-  gridColumn: '1 / -1',
   textAlign: 'center',
   fontSize: '1.8rem',
-  marginBottom: '0.5rem'
+  marginBottom: '1.5rem',
+  fontWeight: 'bold',
 };
+
 const inputStyle = {
   width: '100%',
   padding: '0.8rem',
+  margin: '0.5rem 0',
   fontSize: '1rem',
   border: '1px solid #ccc',
-  borderRadius: '6px'
+  borderRadius: '8px',
 };
+
 const buttonStyle = {
+  width: '100%',
   padding: '0.9rem',
-  backgroundColor: '#397eff',
-  color: '#fff',
+  marginTop: '1rem',
+  backgroundColor: '#337af7',
+  color: 'white',
   fontWeight: 'bold',
+  fontSize: '1rem',
   border: 'none',
-  borderRadius: '6px',
-  cursor: 'pointer'
+  borderRadius: '8px',
+  cursor: 'pointer',
 };
+
+const successStyle = {
+  color: 'green',
+  textAlign: 'center',
+  marginBottom: '1rem',
+};
+
 const errorStyle = {
-  gridColumn: '1 / -1',
   color: 'red',
   textAlign: 'center',
-  marginBottom: '0.5rem'
+  marginBottom: '1rem',
 };

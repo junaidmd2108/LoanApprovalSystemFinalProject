@@ -1,4 +1,3 @@
-// Chatbot.jsx
 import React, { useState } from 'react';
 import './Chatbot.css';
 import { fetchOpenAIResponse } from '../util/openai';
@@ -10,15 +9,15 @@ export default function Chatbot() {
   ]);
   const [input, setInput] = useState('');
 
-  const toggleChat = () => setIsOpen(o => !o);
+  const toggleChat = () => setIsOpen((o) => !o);
 
   const handleSend = async () => {
     if (!input.trim()) return;
-    // add user message
+
     const userMessage = { sender: 'user', text: input };
-    setMessages(ms => [...ms, userMessage]);
+    setMessages((ms) => [...ms, userMessage]);
     setInput('');
-    // FAQ keywords
+
     const lower = userMessage.text.toLowerCase();
     const faqs = {
       hi: 'Hello! How can I assist you with your loan questions?',
@@ -26,16 +25,16 @@ export default function Chatbot() {
       hey: 'Hey! What would you like to know about loans today?',
       thank: 'You’re welcome! Let me know if you have more questions.',
       bye: 'Goodbye! Feel free to come back anytime.',
-      'personal loan': 'Personal loans require a credit score above 700.',
-      'home loan': 'Home loans require a score above 720 and longer tenure.',
+      'personal loan': 'Personal loans usually require a credit score above 700.',
+      'home loan': 'Home loans often require a score above 720 and stable income.',
       'credit score': 'Credit scores range from 300 to 850. Higher is better!',
-      interest: 'Interest rate depends on loan type. E.g., personal: 5%, home: 4%.'
+      interest: 'Interest rates vary by loan type. Personal: ~5%, Home: ~4%.',
     };
+
     const replies = Object.entries(faqs)
       .filter(([k]) => lower.includes(k))
       .map(([, r]) => r);
 
-    // decide bot reply
     let botReply;
     if (replies.length) {
       botReply = { sender: 'bot', text: replies.join(' ') };
@@ -43,11 +42,13 @@ export default function Chatbot() {
       const ai = await fetchOpenAIResponse(userMessage.text);
       botReply = {
         sender: 'bot',
-        text: ai ||
-          'Sorry, I didn’t understand that. Please ask about loan types, credit score, or interest rates.'
+        text:
+          ai ||
+          'Sorry, I didn’t understand that. Please ask about loan types, credit scores, or interest rates.',
       };
     }
-    setMessages(ms => [...ms, botReply]);
+
+    setMessages((ms) => [...ms, botReply]);
   };
 
   return (
@@ -71,8 +72,8 @@ export default function Chatbot() {
               type="text"
               value={input}
               placeholder="Ask a question..."
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleSend()}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
             />
             <button onClick={handleSend}>Send</button>
           </div>
