@@ -1,28 +1,33 @@
-import React, { useState, useContext } from 'react';
-import axios from 'axios';
+import React, { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import '../index.css';
 
 export default function Login() {
-  const { setToken } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
   const [formData, setFormData] = useState({ username: '', password: '' });
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const [error, setError]       = useState('');
+  const navigate                 = useNavigate();
+
+  // clear any stale error on mount
+  useEffect(() => {
+    setError('');
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((f) => ({ ...f, [name]: value }));
-    setError('');
+    setFormData(f => ({ ...f, [name]: value }));
+    if (error) setError('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
     try {
-      const res = await axios.post('http://localhost:8080/api/authenticate', formData);
-      setToken(res.data.jwt);
-      const userRole = res.data.role || 'USER';
-      navigate(userRole === 'MANAGER' ? '/manager-dashboard' : '/user-dashboard');
+      await login(formData.username, formData.password);
+
+      // on success, navigate into your app
+      navigate('/apply-loan');
     } catch (err) {
       setError('Invalid credentials. Please try again.');
     }
@@ -41,6 +46,7 @@ export default function Login() {
           placeholder="Username"
           value={formData.username}
           onChange={handleChange}
+          autoComplete="username"
           required
         />
 
@@ -50,6 +56,7 @@ export default function Login() {
           placeholder="Password"
           value={formData.password}
           onChange={handleChange}
+          autoComplete="current-password"
           required
         />
 

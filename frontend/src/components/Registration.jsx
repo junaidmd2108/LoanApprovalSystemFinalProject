@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function Register() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -53,19 +56,20 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setMessage('');
+
     if (formData.password !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
+
     try {
       await axios.post('http://localhost:8080/api/register', formData);
-      setMessage('Registration successful!');
-      setFormData({
-        username: '', password: '', firstName: '', middleName: '', lastName: '',
-        contactNumber: '', email: '', address: '', dob: '', idType: '',
-        idNumber: '', employmentStatus: '', annualIncome: ''
-      });
-      setConfirmPassword('');
+
+      // ← NEW: immediately send them to login upon success
+      navigate('/login', { replace: true });
+
     } catch (err) {
       setError(err.response?.data || 'Something went wrong. Please try again.');
     }
@@ -79,7 +83,7 @@ export default function Register() {
 
       <form className="register-form" onSubmit={handleSubmit}>
         <div className="form-grid">
-          {/* Row 1: Username / Password / Confirm Password */}
+          {/* Row 1 */}
           <input
             name="username"
             placeholder="Username"
@@ -107,7 +111,7 @@ export default function Register() {
             style={inputStyle}
           />
 
-          {/* Row 2: First / Middle / Last Name */}
+          {/* Row 2 */}
           <input
             name="firstName"
             placeholder="First Name"
@@ -132,7 +136,7 @@ export default function Register() {
             style={inputStyle}
           />
 
-          {/* Row 3: Contact Number / Email / Address */}
+          {/* Row 3 */}
           <input
             name="contactNumber"
             placeholder="Contact Number"
@@ -159,7 +163,7 @@ export default function Register() {
             style={inputStyle}
           />
 
-          {/* Row 4: DOB / ID Type / ID Number */}
+          {/* Row 4 */}
           <input
             type="date"
             name="dob"
@@ -189,7 +193,7 @@ export default function Register() {
             style={inputStyle}
           />
 
-          {/* Row 5: Employment Status / Annual Income / (empty) */}
+          {/* Row 5 */}
           <select
             name="employmentStatus"
             value={formData.employmentStatus}
@@ -209,9 +213,9 @@ export default function Register() {
             onChange={handleChange}
             style={inputStyle}
           />
-          <div /> {/* empty cell for alignment */}
+          <div /> {/* empty cell */}
 
-          {/* Row 6: Submit Button */}
+          {/* Row 6 */}
           <button type="submit" style={buttonStyle}>
             Register
           </button>

@@ -55,3 +55,26 @@
     font-size: 1rem;   /* smaller text beside it */
     font-weight: 500;
   }
+  /* Style the logout button just like your links */
+.navbar-links .navbar-logout-btn {
+  background-color: white;
+  color: #337af7;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.navbar-links .navbar-logout-btn:hover {
+  background-color: #e0ebff;
+}
+
+/* Optionally ensure your logo link has no unexpected underlines */
+.navbar-logo-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
