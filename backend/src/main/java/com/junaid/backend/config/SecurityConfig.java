@@ -1,47 +1,90 @@
+// src/main/java/com/junaid/backend/config/SecurityConfig.java
 package com.junaid.backend.config;
 
 import com.junaid.backend.filter.JwtRequestFilter;
 import com.junaid.backend.service.MyUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private MyUserDetailsService userDetailsService;
+    private final MyUserDetailsService userDetailsService;
+    private final JwtRequestFilter    jwtRequestFilter;
 
-    @Autowired
-    private JwtRequestFilter jwtRequestFilter;
+    public SecurityConfig(MyUserDetailsService userDetailsService,
+                          JwtRequestFilter    jwtRequestFilter) {
+        this.userDetailsService = userDetailsService;
+        this.jwtRequestFilter   = jwtRequestFilter;
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                // pick up our CORS settings
+                .cors(Customizer.withDefaults())
+                // disable CSRF (we're stateless / JWT-based)
+                .csrf(AbstractHttpConfigurer::disable)
+                // route security
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/register",
+                                "/api/authenticate",
+                                "/api/login"
+                        ).permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                // stateless sessions
+                .sessionManagement(sm -> sm
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                // hook up our DAO + JWT filter
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(
+                        jwtRequestFilter,
+                        UsernamePasswordAuthenticationFilter.class
+                );
+
+        return http.build();
+    }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-        var authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
+        var provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
     }
 
     @Bean
     public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration authConfig
+            AuthenticationConfiguration config
     ) throws Exception {
-        return authConfig.getAuthenticationManager();
+        // no deprecated "and()" here—just grab it from the config
+        return config.getAuthenticationManager();
     }
 
     @Bean
@@ -50,38 +93,15 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                // global CORS
-                .cors().and()
-                // no CSRF for JWT
-                .csrf(csrf -> csrf.disable())
-                // authorization rules
-                .authorizeHttpRequests(auth -> auth
-                        // allow unauthenticated access to register/authenticate/login
-                        .requestMatchers(
-                                HttpMethod.POST,
-                                "/api/register",
-                                "/api/authenticate",
-                                "/api/login"
-                        ).permitAll()
-                        // allow all preflight CORS OPTIONS
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        // everything else needs a valid JWT
-                        .anyRequest().authenticated()
-                )
-                // stateless sessions
-                .sessionManagement(sess -> sess
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                );
+    public CorsConfigurationSource corsConfigurationSource() {
+        var cors = new CorsConfiguration();
+        cors.setAllowedOrigins(List.of("http://localhost:3000"));
+        cors.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
+        cors.setAllowedHeaders(List.of("Authorization","Content-Type"));
+        cors.setAllowCredentials(true);
 
-        // plug in your DAO provider and JWT filter
-        http.authenticationProvider(authenticationProvider());
-        http.addFilterBefore(
-                jwtRequestFilter,
-                UsernamePasswordAuthenticationFilter.class
-        );
-
-        return http.build();
+        var source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", cors);
+        return source;
     }
 }

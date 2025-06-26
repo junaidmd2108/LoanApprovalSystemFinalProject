@@ -38,6 +38,7 @@ export default function Navbar() {
         ) : (
           <>
             <Link to="/apply-loan">Apply Loan</Link>
+            <Link to="/past-applications">My Applications</Link>
             <button
               onClick={handleLogout}
               className="navbar-logout-btn"

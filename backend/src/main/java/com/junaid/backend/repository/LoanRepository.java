@@ -1,26 +1,20 @@
+// src/main/java/com/junaid/backend/repository/LoanRepository.java
 package com.junaid.backend.repository;
 
-// Importing Spring Data JPA's base interface for repositories
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
-// Marks this interface as a Spring-managed repository component
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-// Importing the LoanApplication entity class
 import com.junaid.backend.entity.LoanApplication;
 
-/**
- * LoanRepository allows Spring Data JPA to automatically create
- * all basic CRUD operations (save, findById, findAll, deleteById, etc.)
- * for LoanApplication without writing any implementation code.
- */
 @Repository
 public interface LoanRepository extends JpaRepository<LoanApplication, Long> {
-    // JpaRepository<T, ID> means:
-    // T = Entity type → LoanApplication
-    // ID = Primary key type → Long
 
-    // Right now this interface inherits all basic operations.
-    // You can add custom query methods later if needed, e.g.:
-    // List<LoanApplication> findByLoanType(String loanType);
+    /**
+     * Fetch all LoanApplication records for a given username.
+     * Spring Data JPA will generate the implementation automatically
+     * as long as your LoanApplication entity has a `username` field.
+     */
+    List<LoanApplication> findByUsername(String username);
 }

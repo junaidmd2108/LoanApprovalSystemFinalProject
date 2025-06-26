@@ -1,3 +1,4 @@
+// src/main/java/com/junaid/backend/service/LoanServiceImpl.java
 package com.junaid.backend.service;
 
 import com.junaid.backend.entity.LoanApplication;
@@ -5,11 +6,13 @@ import com.junaid.backend.repository.LoanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -25,7 +28,6 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     public String applyLoan(LoanApplication loan, MultipartFile file) {
-        // Step 1: Basic validation
         if (loan.getAmount() <= 0 || loan.getTenure() <= 0) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
@@ -33,7 +35,6 @@ public class LoanServiceImpl implements LoanService {
             );
         }
 
-        // Step 2: Attach uploaded file to loan object
         try {
             loan.setSupportingDocument(file.getBytes());
         } catch (IOException e) {
@@ -43,10 +44,7 @@ public class LoanServiceImpl implements LoanService {
             );
         }
 
-        // Step 3: Generate mock credit score
         int generatedCreditScore = new Random().nextInt(301) + 600;
-
-        // Step 4: Define credit score thresholds
         Map<String, Integer> requiredScores = new HashMap<>();
         requiredScores.put("home", 720);
         requiredScores.put("personal", 700);
@@ -54,7 +52,6 @@ public class LoanServiceImpl implements LoanService {
         requiredScores.put("business", 740);
         requiredScores.put("auto", 710);
 
-        // Step 5: Check if applicant meets credit score requirement
         String loanType = loan.getLoanType().toLowerCase();
         int requiredScore = requiredScores.getOrDefault(loanType, 700);
 
@@ -67,10 +64,14 @@ public class LoanServiceImpl implements LoanService {
             );
         }
 
-        // Step 6: Save the loan to database
         loanRepository.save(loan);
-
-        // Step 7: Return success message
         return "Loan application submitted successfully. Your credit score is " + generatedCreditScore + ".";
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<LoanApplication> getByUsername(String username) {
+        // Runs in a read-only transaction so LOBs can be streamed
+        return loanRepository.findByUsername(username);
     }
 }

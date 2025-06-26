@@ -5,8 +5,9 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Registration from './components/Registration';
 import Login from './components/Login';
 import ApplyLoan from './components/ApplyLoan';
+import PastApplications from './components/PastApplications';  // ← new import
 import Chatbot from './components/Chatbot';
-import Navbar from './components/Navbar'; //  Using the new Navbar
+import Navbar from './components/Navbar';
 import { AuthContext, AuthProvider } from './context/AuthContext';
 import LandingPage from './components/LandingPage';
 
@@ -15,7 +16,7 @@ function AppWrapper() {
 
   return (
     <Router>
-      <Navbar /> {/*  New navbar always visible */}
+      <Navbar />
       <div style={{ maxWidth: 600, margin: '2rem auto', position: 'relative' }}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
@@ -33,6 +34,11 @@ function AppWrapper() {
           <Route
             path="/apply-loan"
             element={token ? <ApplyLoan /> : <Navigate to="/login" replace />}
+          />
+
+          <Route
+            path="/past-applications"
+            element={token ? <PastApplications /> : <Navigate to="/login" replace />}
           />
 
           <Route
