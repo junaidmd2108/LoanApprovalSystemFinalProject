@@ -113,3 +113,57 @@
     cursor: pointer;
     outline: none;
   }
+  /* smooth open/close */
+.chatbot-container.open .chatbot-box {
+  animation: slideUp 0.2s ease-out forwards;
+}
+.chatbot-container .chatbot-box {
+  opacity: 0;
+  transform: translateY(10px);
+}
+@keyframes slideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ensure messages wrap and don’t overflow */
+.chatbot-message {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* “Typing…” style */
+.chatbot-message.bot.typing {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+/* disable input styling */
+.chatbot-input input:disabled,
+.chatbot-input button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* below .chatbot-messages add */
+.chatbot-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #f0f0f0;
+}
+.suggestion-chip {
+  background: #337af7;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  padding: 4px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.suggestion-chip:hover {
+  background: #265bb5;
+}
