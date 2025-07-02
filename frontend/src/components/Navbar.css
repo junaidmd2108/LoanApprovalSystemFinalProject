@@ -1,80 +1,97 @@
-/* Navbar.css */
+/* =====================================
+// File: Navbar.css
+// Purpose: Styles for the navigation bar component
+// Used in: Navbar.jsx component
+// Features: Responsive layout, hover effects, sticky positioning
+// Dependencies: None (pure CSS)
+// ===================================== */
 
+/* Main navbar container with sticky positioning */
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: #337af7;
-    color: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    font-family: 'Segoe UI', sans-serif;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  }
-  
-  .navbar-logo a {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: white;
-    text-decoration: none;
-  }
-  
-  .navbar-links {
-    display: flex;
-    gap: 1rem;
-  }
-  
-  .navbar-links a {
-    background-color: white;
-    color: #337af7;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: background-color 0.2s ease;
-  }
-  
-  .navbar-links a:hover {
-    background-color: #e0ebff;
-  }
-  .navbar-logo {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  
-  .navbar-logo-img {
-    height: 60px;      /* BIGGER logo */
-    width: auto;
-  }
-  
-  .navbar-logo-text {
-    color: white;
-    font-size: 1rem;   /* smaller text beside it */
-    font-weight: 500;
-  }
-  /* Style the logout button just like your links */
+    display: flex;                /* Enable flexbox layout */
+    justify-content: space-between; /* Space items apart */
+    align-items: center;           /* Center items vertically */
+    padding: 1rem 2rem;           /* Inner spacing */
+    background-color: #337af7;    /* Primary blue background */
+    color: white;                 /* White text */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    font-family: 'Segoe UI', sans-serif;        /* Modern font */
+    position: sticky;             /* Stick to top while scrolling */
+    top: 0;                      /* Stick to top edge */
+    z-index: 1000;               /* Keep above other content */
+}
+
+/* Logo section styling */
+.navbar-logo a {
+    font-size: 1.5rem;           /* Larger logo text */
+    font-weight: bold;           /* Bold weight */
+    color: white;                /* White text */
+    text-decoration: none;       /* Remove underline */
+}
+
+/* Navigation links container */
+.navbar-links {
+    display: flex;               /* Enable flexbox */
+    gap: 1rem;                  /* Space between links */
+}
+
+/* Individual navigation link styling */
+.navbar-links a {
+    background-color: white;     /* White background */
+    color: #337af7;             /* Blue text */
+    padding: 0.5rem 1rem;       /* Inner spacing */
+    border-radius: 8px;         /* Rounded corners */
+    text-decoration: none;      /* Remove underline */
+    font-weight: 500;           /* Medium weight */
+    transition: background-color 0.2s ease; /* Smooth hover */
+}
+
+/* Hover effect for navigation links */
+.navbar-links a:hover {
+    background-color: #e0ebff;   /* Light blue on hover */
+}
+
+/* Logo container layout */
+.navbar-logo {
+    display: flex;              /* Enable flexbox */
+    align-items: center;        /* Center items vertically */
+    gap: 0.5rem;               /* Space between logo and text */
+}
+
+/* Logo image dimensions */
+.navbar-logo-img {
+    height: 60px;              /* Fixed height */
+    width: auto;               /* Maintain aspect ratio */
+}
+
+/* Logo text styling */
+.navbar-logo-text {
+    color: white;              /* White text */
+    font-size: 1rem;          /* Base font size */
+    font-weight: 500;         /* Medium weight */
+}
+
+/* Logout button styling */
 .navbar-links .navbar-logout-btn {
-  background-color: white;
-  color: #337af7;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 8px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+    background-color: white;    /* White background */
+    color: #337af7;            /* Blue text */
+    padding: 0.5rem 1rem;      /* Inner spacing */
+    border: none;              /* Remove border */
+    border-radius: 8px;        /* Rounded corners */
+    font-weight: 500;          /* Medium weight */
+    cursor: pointer;           /* Hand cursor */
+    transition: background-color 0.2s ease; /* Smooth hover */
 }
 
+/* Hover effect for logout button */
 .navbar-links .navbar-logout-btn:hover {
-  background-color: #e0ebff;
+    background-color: #e0ebff;  /* Light blue on hover */
 }
 
-/* Optionally ensure your logo link has no unexpected underlines */
+/* Logo link container */
 .navbar-logo-link {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  text-decoration: none;
+    display: flex;             /* Enable flexbox */
+    align-items: center;       /* Center items vertically */
+    gap: 0.5rem;              /* Space between items */
+    text-decoration: none;     /* Remove underline */
 }

@@ -1,147 +1,198 @@
+/* =====================================
+// File: index.css
+// Purpose: Global styles for loan application system
+// Used in: All components
+// Features: Responsive design, consistent theming, form layouts
+// Dependencies: None (pure CSS)
+// ===================================== */
+
 /* ----------------------------------------
    GLOBAL FORM STYLES
+   Controls the appearance of all form elements
 ---------------------------------------- */
 
 .form-container {
-  max-width: 500px;
-  margin: 3rem auto;
-  padding: 2rem;
-  background-color: #fff;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  max-width: 500px;          /* Limit form width for readability */
+  margin: 3rem auto;         /* Center form with vertical spacing */
+  padding: 2rem;             /* Internal spacing */
+  background-color: #fff;    /* White background */
+  border-radius: 16px;       /* Rounded corners */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); /* Subtle elevation */
 }
+
 .form-container h2 {
-  text-align: center;
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
-  font-weight: bold;
+  text-align: center;        /* Center form titles */
+  font-size: 1.8rem;        /* Large title size */
+  margin-bottom: 1.5rem;     /* Space below title */
+  font-weight: bold;         /* Bold text */
 }
+
+/* Form input and select styling */
 .form-container input,
 .form-container select {
-  width: 100%;
-  padding: 0.9rem;
-  margin: 0.6rem 0;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
+  width: 100%;              /* Full width inputs */
+  padding: 0.9rem;          /* Comfortable padding */
+  margin: 0.6rem 0;         /* Vertical spacing */
+  font-size: 1rem;          /* readable text size */
+  border-radius: 8px;       /* Rounded corners */
+  border: 1px solid #ccc;   /* Subtle border */
+  box-sizing: border-box;   /* Include padding in width */
 }
+
+/* Submit button styling */
 .form-container button {
-  width: 100%;
-  padding: 0.9rem;
-  margin-top: 1rem;
-  background-color: #337af7;
-  color: #fff;
-  font-weight: bold;
-  font-size: 1rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+  width: 100%;              /* Full width button */
+  padding: 0.9rem;          /* Comfortable padding */
+  margin-top: 1rem;         /* Space above button */
+  background-color: #337af7; /* Brand blue */
+  color: #fff;              /* White text */
+  font-weight: bold;        /* Bold text */
+  font-size: 1rem;          /* Readable size */
+  border: none;             /* No border */
+  border-radius: 8px;       /* Rounded corners */
+  cursor: pointer;          /* Hand cursor */
 }
-.form-success { color: green;  text-align: center; margin-bottom: 1rem; }
-.form-error   { color: red;    text-align: center; margin-bottom: 1rem; }
+
+/* Message styling */
+.form-success { 
+  color: green;            /* Success message color */
+  text-align: center;      /* Center align */
+  margin-bottom: 1rem;     /* Bottom spacing */
+}
+
+.form-error { 
+  color: red;              /* Error message color */
+  text-align: center;      /* Center align */
+  margin-bottom: 1rem;     /* Bottom spacing */
+}
 
 /* ----------------------------------------
    TABLE STYLES (for PastApplications)
+   Responsive table layout with mobile support
 ---------------------------------------- */
 
 .table-wrapper {
-  overflow-x: auto;
-  margin-top: 1rem;
+  overflow-x: auto;         /* Horizontal scroll on small screens */
+  margin-top: 1rem;         /* Top spacing */
 }
+
 .applications-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: inherit;
+  width: 100%;             /* Full width table */
+  border-collapse: collapse; /* Remove cell spacing */
+  font-family: inherit;     /* Inherit font */
 }
+
 .applications-table thead {
-  background-color: #f5f5f5;
+  background-color: #f5f5f5; /* Light gray header */
 }
+
 .applications-table th,
 .applications-table td {
-  padding: 0.75rem;
-  text-align: left;
-  border-bottom: 1px solid #eee;
+  padding: 0.75rem;        /* Cell padding */
+  text-align: left;        /* Left align text */
+  border-bottom: 1px solid #eee; /* Cell borders */
 }
+
 .applications-table th {
-  font-weight: 600;
-  color: #333;
-  border-bottom: 2px solid #ddd;
+  font-weight: 600;        /* Semi-bold headers */
+  color: #333;             /* Dark text */
+  border-bottom: 2px solid #ddd; /* Thicker bottom border */
 }
+
+/* Zebra striping */
 .applications-table tbody tr:nth-child(odd) {
-  background-color: #fafafa;
+  background-color: #fafafa; /* Light background */
 }
+
+/* Hover effect */
 .applications-table tbody tr:hover {
-  background-color: #f0f8ff;
+  background-color: #f0f8ff; /* Light blue hover */
 }
-/* Mobile: show labels */
+
+/* Mobile responsive table */
 @media (max-width: 600px) {
-  .applications-table thead { display: none; }
+  .applications-table thead { 
+    display: none;          /* Hide headers */
+  }
+  
   .applications-table tr {
-    display: block;
-    margin-bottom: 1rem;
+    display: block;         /* Stack rows */
+    margin-bottom: 1rem;    /* Space between rows */
   }
+  
   .applications-table td {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.5rem;
-    border: none;
-    border-bottom: 1px solid #eee;
+    display: flex;          /* Flex layout */
+    justify-content: space-between; /* Space between label and value */
+    padding: 0.5rem;        /* Cell padding */
+    border: none;           /* Remove borders */
+    border-bottom: 1px solid #eee; /* Bottom border only */
   }
+  
+  /* Add labels on mobile */
   .applications-table td::before {
-    content: attr(data-label);
-    font-weight: 600;
-    color: #555;
+    content: attr(data-label); /* Use data-label attribute */
+    font-weight: 600;          /* Semi-bold labels */
+    color: #555;               /* Dark gray text */
   }
 }
 
 /* ----------------------------------------
    REGISTRATION PAGE GRID
+   Three-column grid layout for registration form
 ---------------------------------------- */
 
 .register-container {
-  max-width: 1100px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  max-width: 1100px;        /* Wider container */
+  margin: 2rem auto;        /* Center with spacing */
+  padding: 2rem;            /* Internal padding */
+  background-color: #fff;   /* White background */
+  border-radius: 12px;      /* Rounded corners */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* Elevation */
 }
+
 .register-container h2 {
-  text-align: center;
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  color: #1f1f1f;
+  text-align: center;       /* Center title */
+  font-size: 2rem;          /* Large title */
+  margin-bottom: 1.5rem;    /* Bottom spacing */
+  color: #1f1f1f;          /* Dark text */
 }
+
+/* Grid layout */
 .register-form .form-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  grid-auto-rows: min-content;
+  display: grid;            /* Enable grid */
+  grid-template-columns: repeat(3, 1fr); /* Three columns */
+  gap: 1rem;               /* Grid spacing */
+  grid-auto-rows: min-content; /* Row height */
 }
+
+/* Form elements in grid */
 .register-form input,
 .register-form select,
 .register-form button {
-  width: 100%;
-  box-sizing: border-box;
-}
-.register-form button[type="submit"] {
-  grid-column: 1 / -1;
-  margin-top: 1.5rem;
-  padding: 0.9rem;
-  font-size: 1.1rem;
-  background-color: #337af7;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-}
-.register-form .full-width {
-  grid-column: 1 / -1;
+  width: 100%;             /* Full width */
+  box-sizing: border-box;  /* Include padding */
 }
 
-/* Explicit field placement */
+/* Submit button styling */
+.register-form button[type="submit"] {
+  grid-column: 1 / -1;     /* Full width button */
+  margin-top: 1.5rem;      /* Top spacing */
+  padding: 0.9rem;         /* Button padding */
+  font-size: 1.1rem;       /* Large text */
+  background-color: #337af7; /* Brand blue */
+  color: #fff;             /* White text */
+  border: none;            /* No border */
+  border-radius: 8px;      /* Rounded corners */
+  cursor: pointer;         /* Hand cursor */
+  font-weight: bold;       /* Bold text */
+}
+
+/* Full width elements */
+.register-form .full-width {
+  grid-column: 1 / -1;     /* Span all columns */
+}
+
+/* Explicit grid placement */
 .register-form input[name="username"]        { grid-column: 1; grid-row: 1; }
 .register-form input[name="password"]        { grid-column: 2; grid-row: 1; }
 .register-form input[name="confirmPassword"] { grid-column: 3; grid-row: 1; }
@@ -155,120 +206,138 @@
 .register-form select[name="idType"]         { grid-column: 2; grid-row: 4; }
 .register-form input[name="idNumber"]        { grid-column: 3; grid-row: 4; }
 .register-form select[name="employmentStatus"] { grid-column: 1; grid-row: 5; }
-.register-form input[name="annualIncome"]      { grid-column: 2; grid-row: 5; }
+.register-form input[name="annualIncome"]    { grid-column: 2; grid-row: 5; }
 
 /* ----------------------------------------
    NAVBAR
+   Top navigation bar styling
 ---------------------------------------- */
 
 .navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 2rem;
-  height: 80px;
-  background-color: #337af7;
+  display: flex;           /* Flex layout */
+  align-items: center;     /* Vertical center */
+  justify-content: space-between; /* Space between items */
+  padding: 0 2rem;         /* Horizontal padding */
+  height: 80px;            /* Fixed height */
+  background-color: #337af7; /* Brand blue */
 }
+
 .navbar-logo {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  display: flex;           /* Flex layout */
+  align-items: center;     /* Vertical center */
+  gap: 0.5rem;            /* Space between items */
 }
+
 .navbar-logo-img {
-  height: 60px;
-  width: auto;
+  height: 60px;           /* Fixed height */
+  width: auto;            /* Maintain aspect ratio */
 }
+
 .navbar-logo-text {
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 500;
+  color: #fff;            /* White text */
+  font-size: 1rem;        /* Text size */
+  font-weight: 500;       /* Medium weight */
 }
+
 .navbar-links {
-  display: flex;
-  gap: 1rem;
+  display: flex;          /* Flex layout */
+  gap: 1rem;             /* Space between links */
 }
+
 .navbar-links a {
-  padding: 0.5rem 1rem;
-  background-color: #fff;
-  color: #337af7;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 500;
-  transition: background-color 0.2s ease;
+  padding: 0.5rem 1rem;   /* Link padding */
+  background-color: #fff; /* White background */
+  color: #337af7;        /* Brand blue text */
+  border-radius: 8px;     /* Rounded corners */
+  text-decoration: none;  /* No underline */
+  font-weight: 500;       /* Medium weight */
+  transition: background-color 0.2s ease; /* Smooth hover */
 }
+
 .navbar-links a:hover {
-  background-color: #f0f0f0;
+  background-color: #f0f0f0; /* Light gray on hover */
 }
 
 /* ----------------------------------------
    HERO / LANDING
+   Landing page hero section
 ---------------------------------------- */
 
 .hero-background {
-  width: 100%;
-  background-size: cover;
-  background-position: center;
-  position: relative;
-  padding: 4rem 0;
+  width: 100%;            /* Full width */
+  background-size: cover;  /* Cover background */
+  background-position: center; /* Center background */
+  position: relative;      /* For overlay */
+  padding: 4rem 0;        /* Vertical padding */
 }
+
 .landing-overlay {
-  background-color: rgba(0, 0, 0, 0.4);
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background-color: rgba(0, 0, 0, 0.4); /* Dark overlay */
+  width: 100%;            /* Full width */
+  height: 100%;           /* Full height */
+  display: flex;          /* Flex layout */
+  justify-content: center; /* Center content */
+  align-items: center;     /* Center vertically */
 }
+
 .landing-box {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-  color: #fff;
+  max-width: 1200px;      /* Maximum width */
+  margin: 0 auto;         /* Center horizontally */
+  display: flex;          /* Flex layout */
+  flex-wrap: wrap;        /* Allow wrapping */
+  align-items: center;    /* Center vertically */
+  justify-content: space-between; /* Space between items */
+  gap: 2rem;             /* Space between elements */
+  color: #fff;           /* White text */
 }
+
 .landing-box h1 {
-  font-size: 3rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  line-height: 1.2;
+  font-size: 3rem;       /* Large heading */
+  font-weight: 700;      /* Bold weight */
+  margin-bottom: 1rem;   /* Bottom spacing */
+  line-height: 1.2;      /* Line height */
 }
+
 .landing-box p {
-  font-size: 1.25rem;
-  margin-bottom: 2rem;
-  max-width: 600px;
-  color: #f0f0f0;
+  font-size: 1.25rem;    /* Large paragraph text */
+  margin-bottom: 2rem;   /* Bottom spacing */
+  max-width: 600px;      /* Maximum width */
+  color: #f0f0f0;       /* Light gray text */
 }
+
 .callout {
-  margin-bottom: 2rem;
-  font-size: 1rem;
-  line-height: 1.5;
+  margin-bottom: 2rem;   /* Bottom spacing */
+  font-size: 1rem;       /* Normal text size */
+  line-height: 1.5;      /* Line height */
 }
+
 .callout a {
-  display: inline-block;
-  margin: 0.25rem 0;
-  padding: 0.5rem 1rem;
-  background-color: #fff;
-  color: #337af7;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background-color 0.2s ease;
+  display: inline-block; /* Inline block display */
+  margin: 0.25rem 0;     /* Vertical margin */
+  padding: 0.5rem 1rem;  /* Padding */
+  background-color: #fff; /* White background */
+  color: #337af7;       /* Brand blue text */
+  border-radius: 6px;    /* Rounded corners */
+  text-decoration: none; /* No underline */
+  font-weight: 600;      /* Semi-bold */
+  transition: background-color 0.2s ease; /* Smooth hover */
 }
+
 .callout a:hover {
-  background-color: #e6e6e6;
+  background-color: #e6e6e6; /* Light gray on hover */
 }
+
 .icon-row {
-  display: flex;
-  gap: 1.5rem;
+  display: flex;         /* Flex layout */
+  gap: 1.5rem;          /* Space between icons */
 }
+
 .icon-item {
-  font-size: 2.5rem;
+  font-size: 2.5rem;    /* Large icons */
 }
+
 .landing-box img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 12px;
+  max-width: 100%;      /* Responsive images */
+  height: auto;         /* Maintain aspect ratio */
+  border-radius: 12px;  /* Rounded corners */
 }

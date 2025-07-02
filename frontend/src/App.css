@@ -1,38 +1,91 @@
+/* =====================================
+// File: App.css
+// Purpose: Main application styles
+// Used in: App.jsx component
+// Features: Layout, animations, responsive design
+// =====================================
+*/
+
+/* Main container styles */
 .App {
-  text-align: center;
+  text-align: center;      /* Center align all content */
+  min-height: 100vh;       /* Full viewport height */
+  position: relative;      /* For footer positioning */
 }
 
+/* React logo animation styles */
 .App-logo {
-  height: 40vmin;
-  pointer-events: none;
+  height: 40vmin;         /* Responsive height */
+  pointer-events: none;    /* Disable pointer events */
 }
 
+/* Animation preference media query */
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+    animation: App-logo-spin infinite 20s linear; /* Spin animation */
   }
 }
 
+/* Header section styles */
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  background-color: #282c34;  /* Dark background */
+  min-height: 100vh;          /* Full viewport height */
+  display: flex;              /* Flexbox layout */
+  flex-direction: column;     /* Stack children vertically */
+  align-items: center;        /* Center horizontally */
+  justify-content: center;    /* Center vertically */
+  font-size: calc(10px + 2vmin); /* Responsive font size */
+  color: white;               /* White text */
 }
 
+/* Link styles */
 .App-link {
-  color: #61dafb;
+  color: #61dafb;            /* React blue color */
+  text-decoration: none;      /* Remove underline */
+  transition: color 0.3s;     /* Smooth color transition */
 }
 
+/* Link hover effect */
+.App-link:hover {
+  color: #21a1f1;            /* Darker blue on hover */
+}
+
+/* Logo spin animation keyframes */
 @keyframes App-logo-spin {
   from {
-    transform: rotate(0deg);
+    transform: rotate(0deg);  /* Start rotation */
   }
   to {
-    transform: rotate(360deg);
+    transform: rotate(360deg); /* End rotation */
+  }
+}
+
+/* Media query for mobile devices */
+@media screen and (max-width: 768px) {
+  .App-header {
+    padding: 1rem;           /* Add padding on mobile */
+  }
+  
+  .App-logo {
+    height: 30vmin;          /* Smaller logo on mobile */
+  }
+}
+
+/* Media query for larger screens */
+@media screen and (min-width: 1200px) {
+  .App-header {
+    font-size: calc(12px + 2vmin); /* Larger text on big screens */
+  }
+}
+
+/* Print styles */
+@media print {
+  .App-logo {
+    display: none;           /* Hide logo when printing */
+  }
+  
+  .App-header {
+    background-color: white; /* White background for printing */
+    color: black;            /* Black text for printing */
   }
 }
