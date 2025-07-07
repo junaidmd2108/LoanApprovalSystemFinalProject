@@ -66,4 +66,4 @@ Frontend (React)
 •	Enhance chatbot with NLP capabilities
 13. Conclusion
 The Loan Approval System simplifies the traditional loan application process using modern web technologies, offering users a secure, intelligent, and supportive platform to apply for loans based on creditworthiness.
-![image](https://github.com/user-attachments/assets/9142b505-8bc6-45f5-9ac8-f9a25dfa3ff0)
+
